@@ -13,7 +13,7 @@ class E_dosen extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
-
+	
     $this->db_2 = $this->load->database('otherdb', TRUE); 
     $this->tipe_user = simple_decrypt($this->session->userdata('tipe_user'));
     $this->id_user = $this->session->userdata('user_id');
@@ -22,7 +22,7 @@ class E_dosen extends CI_Controller
 		$this->load->library('tank_auth');
     $this->load->model('e_dosen/e_dosen_model');
     $this->load->model('e_dosen/grocery_crud_model');
-  	$this->load->model('e_dosen/tambahan_model');
+	$this->load->model('e_dosen/tambahan_model');
 		$this->load->library('pagination');
 
 		$this->load->library('menu_otomatis');
@@ -42,6 +42,9 @@ class E_dosen extends CI_Controller
 
   public function index()
   {
+        if (!$this->tank_auth->is_logged_in()) {
+            redirect('/auth/login/');
+        } else {
             //cek tipe user
               if( $this->tipe_user == '1'){
                 redirect('/e_dosen/log_login_dosen');
@@ -54,7 +57,7 @@ class E_dosen extends CI_Controller
               }
             $this->_example_output((object)array('output' => '' , 'js_files' => array() , 'css_files' => array()));
         
-
+        } 
   }
 
   private function _example_output($output = null)
@@ -67,7 +70,7 @@ class E_dosen extends CI_Controller
       $data['keywords'] = 'E-learning STMI';
 
       $data['artikel'] =$this->e_dosen_model->get_all_artikel();
-
+	
     $output->data=$data;
     //menyisipkan data lain ke dalam _view $output
     $this->load->view('e_dosen/_layout_statis',$output);  
@@ -108,12 +111,183 @@ class E_dosen extends CI_Controller
 
       $this->_example_output($output);
   }
+  
+  function tracer_studi_alumni($nim='')
+  {
+    if (!$this->tank_auth->is_logged_in()) {
+      redirect('/auth/login/');
+        }
+	if( $this->tipe_user != '4'){
+          redirect('/e_dosen');
+      }
+    if(empty($nim) || $nim == 'export' || $nim == 'print'){
+      $crud = new grocery_CRUD();
 
+      $crud->set_theme('flexigrid');
+      $crud->set_table('alumni_kuesioner');
+     // $crud->required_fields('judul','link');
+      $crud->display_as('kd_jurusan','Pilihan Jurusan');
+      $crud->display_as('kd_sumberinfo','Sumber Informasi');
+      $crud->display_as('kd_agama','Agama');
+      $crud->display_as('kd_kelamin','Jenis Kelamin');
+      $crud->display_as('kd_waktu_kuliah','Waktu Kuliah');
+      $crud->display_as('jurusan','Jurusan Waktu Sekolah');
+     
+      $crud->columns('nim','nama','angkatan','jurusan','jabatan','hp','thn_masuk','thn_lulus','status_pekerjaan','nama_kantor','alamat_kantor','bidang_kantor','kompetensi_spesifik','matakuliah_penting','matakuliah_tidak_penting','saran');
+	  $crud->callback_column('nim',array($this,'_callback_webpage_url'));
+      $crud->unset_add();
+      $crud->unset_delete();
+      $crud->unset_edit();
+      $output = $crud->render();
+      $this->_example_output($output);
+	}else{
+		$data['print_data_tracer_studi'] = $this->e_dosen_model->get_data_tracer_studi($nim);
+		$this->load->view('e_dosen/_print_tcs',$data);
+	}
+  }
+  public function _callback_webpage_url($value, $row)
+	{
+	return "<a href='".site_url('e_dosen/tracer_studi_alumni/'.$row->nim)."'>$value</a>";
+	}
+  function _create_recaptcha()
+  {
+    $this->load->helper('recaptcha');
+
+    // Add custom theme so we can get only image
+    $options = "<script>var RecaptchaOptions = {theme : 'clean'};</script>\n";
+
+    // Get reCAPTCHA JS and non-JS HTML
+    $html = recaptcha_get_html($this->config->item('recaptcha_public_key', 'tank_auth'));
+
+    return $options.$html;
+  }
+  
+  function _check_captcha($code)
+  {
+    $time = $this->session->flashdata('captcha_time');
+    $word = $this->session->flashdata('captcha_word');
+
+    list($usec, $sec) = explode(" ", microtime());
+    $now = ((float)$usec + (float)$sec);
+
+    if ($now - $time > $this->config->item('captcha_expire', 'tank_auth')) {
+      $this->form_validation->set_message('_check_captcha', $this->lang->line('auth_captcha_expired'));
+      return FALSE;
+
+    } elseif (($this->config->item('captcha_case_sensitive', 'tank_auth') AND
+        $code != $word) OR
+        strtolower($code) != strtolower($word)) {
+      $this->form_validation->set_message('_check_captcha', $this->lang->line('auth_incorrect_captcha'));
+      return FALSE;
+    }
+    return TRUE;
+  }
+  
+  public function chat($id_jadual)
+  {
+	  if (!$this->tank_auth->is_logged_in()) {
+		  redirect('/auth/login/');
+	  }
+       //cek tipe user
+      if( $this->tipe_user != '2'){
+          redirect('/e_dosen');
+      }
+	  
+	  if(!$id_jadual){
+			redirect('e_dosen/chat_list');
+	  }
+      $this->load->model('e_dosen/chat_model');
+      $data['daftar_chat']=$this->chat_model->get_chat($id_jadual);
+
+   
+     $data['use_recaptcha'] = $this->config->item('use_recaptcha', 'tank_auth');
+     if ($data['use_recaptcha']) {
+          $data['recaptcha_html'] = $this->_create_recaptcha();
+        } else {
+          $data['captcha_html'] = $this->_create_captcha();
+        }
+
+
+        if ($data['use_recaptcha']){
+          //keamanan
+          $this->form_validation->set_rules('recaptcha_response_field', 'Confirmation Code', 'trim|xss_clean|required|callback__check_recaptcha');
+        }else{
+          $this->form_validation->set_rules('captcha', 'Confirmation Code', 'trim|xss_clean|required|callback__check_captcha');
+        }
+
+      //data chat
+      $this->form_validation->set_rules('chat', 'Chat', 'trim|required|xss_clean|max_length[250]|strip_tags');
+     
+        
+
+      //$data['error_bukan_mahasiswa'] = 'style="display:none;"';
+
+      if ($this->form_validation->run()) {                // validation ok
+
+          $data['chat']=$this->input->post('chat');
+
+        /*
+              if ($this->mhs_model->cek_mhs_aktif($data['nim'],$data['tgl_lahir']))
+              {
+                $this->mhs_model->log_login_mhs($data['nim']);
+                redirect('mhs/chat');
+              
+              }
+              else
+              {
+                  $data['error_bukan_mahasiswa'] ='';
+
+              }
+        */
+
+              $this->chat_model->insert_chat($data['chat'],$this->session->userdata('nama_asli'),$id_jadual);
+              redirect('e_dosen/chat/'.$id_jadual);
+        
+      }
+
+      $data['recaptcha_html'] = $this->_create_recaptcha();
+      $data['title'] = 'E Learning Mahasiswa';
+      $data['description'] = 'E Learning Mahasiswa';
+      $data['keywords'] = 'e learning, mhs, mahasiswa stmi, stmi';
+ 
+       //isi konten
+       $data['isicontent'] = 'e_dosen/_chat';
+       $data['menu_header'] = $this->menu_otomatis->create_menu_admin(0, 1, 'menu_admin_elearning_dosen');   
+	   $this->load->view('e_dosen/_layout',$data); 
+  
+  }
+
+  public function chat_list()
+  {
+
+    //cek tipe user
+        if (!$this->tank_auth->is_logged_in()) {
+			redirect('/auth/login/');
+		}
+       //cek tipe user
+      if( $this->tipe_user != '2'){
+          redirect('/e_dosen');
+      }
+		  $this->load->model('e_dosen/chat_model');
+          $data['title'] = 'E Learning Mahasiswa';
+          $data['description'] = 'E Learning Mahasiswa';
+          $data['keywords'] = 'e learning, mhs, mahasiswa stmi, stmi';
+
+          $data['listchat']=$this->chat_model->get_jadual_chat($this->session->userdata('nama_asli'));
+
+
+          //isi konten
+          $data['isicontent'] = 'e_dosen/_chat_list';
+		    $data['menu_header'] = $this->menu_otomatis->create_menu_admin(0, 1, 'menu_admin_elearning_dosen');   
+          $this->load->view('e_dosen/_layout',$data); 
+
+  }
+  
   public function log_user_after_insert_blog_dosen($post_array,$primary_key)
   {
 
       $user_logs_insert = array(
-      'penulis' => $this->session->userdata('user_id'),
+          'penulis' => $this->session->userdata('user_id'),
 		  'tanggal_input'    => date('Y-m-d H:i:s'),
       );
    

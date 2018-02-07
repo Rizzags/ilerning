@@ -1,4 +1,14 @@
-
+ <?php
+ 
+ header("Content-type: application/vnd-ms-excel");
+ 
+ header("Content-Disposition: attachment; filename=$title.xls");
+ 
+ header("Pragma: no-cache");
+ 
+ header("Expires: 0");
+ 
+ ?>
       <!-- BEGIN PAGE -->  
       <div id="main-content">
          <!-- BEGIN PAGE CONTAINER-->
@@ -207,6 +217,8 @@ $(document).ready(function() {
 <style type="text/css">
   select option[disabled] { background-color: #ffafaf;}
 </style>
+
+                            
                         </div>
                     </div>
                     <!-- END EXAMPLE TABLE widget-->
@@ -231,7 +243,6 @@ $(document).ready(function() {
                                 <a href="javascript:;" class="icon-chevron-down"></a>
                             </span>
                         </div>
-						
                         <div class="widget-body">
                          
 <!--

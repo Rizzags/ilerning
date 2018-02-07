@@ -34,7 +34,7 @@ class Cetak_nilai_model extends CI_Model {
         
 
 //melihat nilai terkunci semester sebelumnya genap
-       $this->query = $this->db_2->query("SELECT A.id_mtk, A.id_jadual, A.nama, A.bobot_tugas, A.bobot_uts, A.bobot_uas, A.periode, A.thn_akademik, A.id_hari, A.jam_mulai, A.jam_selesai, A.kelas, el_kunci_nilai.id_status as status, A.nama_dosen, A.gelar_dosen, A.jumlah_cetak, el_kunci_nilai.waktu_input
+/*       $this->query = $this->db_2->query("SELECT A.id_mtk, A.id_jadual, A.nama, A.bobot_tugas, A.bobot_uts, A.bobot_uas, A.periode, A.thn_akademik, A.id_hari, A.jam_mulai, A.jam_selesai, A.kelas, el_kunci_nilai.id_status as status, A.nama_dosen, A.gelar_dosen, A.jumlah_cetak, el_kunci_nilai.waktu_input
             FROM (
                     SELECT A.id_mtk, A.id_jadual, B.nama, A.bobot_tugas, A.bobot_uts, A.bobot_uas, A.periode, A.thn_akademik, A.id_hari, A.jam_mulai, A.jam_selesai, C.kelas, D.nama AS nama_dosen, D.gelar as gelar_dosen, E.jumlah_cetak as jumlah_cetak
                     FROM jadual A, mtk B, krs C, dosen D, el_jumlah_cetak E
@@ -86,8 +86,25 @@ class Cetak_nilai_model extends CI_Model {
                 LEFT JOIN  el_kunci_nilai
                 ON A.id_jadual= el_kunci_nilai.id_jadual 
             WHERE id_status=1 ORDER BY waktu_input DESC, id DESC");
-
 */
+//melihat nilai terkunci semester tertentu
+
+       $this->query = $this->db_2->query("SELECT A.id_mtk, A.id_jadual, A.nama, A.bobot_tugas, A.bobot_uts, A.bobot_uas, A.periode, A.thn_akademik, A.id_hari, A.jam_mulai, A.jam_selesai, A.kelas, el_kunci_nilai.id_status as status, A.nama_dosen, A.gelar_dosen, A.jumlah_cetak, el_kunci_nilai.waktu_input
+            FROM (
+                    SELECT A.id_mtk, A.id_jadual, B.nama, A.bobot_tugas, A.bobot_uts, A.bobot_uas, A.periode, A.thn_akademik, A.id_hari, A.jam_mulai, A.jam_selesai, C.kelas, D.nama AS nama_dosen, D.gelar as gelar_dosen, E.jumlah_cetak as jumlah_cetak
+                    FROM jadual A, mtk B, krs C, dosen D, el_jumlah_cetak E
+                    WHERE A.id_mtk=B.id_mtk
+                    AND A.id_jadual=C.id_jadual
+                    AND A.id_dosen=D.id_dosen
+                    AND A.id_jadual=E.id_jadual
+                    AND A.thn_akademik=2017
+                    AND A.periode=1
+                    GROUP BY id_jadual ) as A
+
+                LEFT JOIN  el_kunci_nilai
+                ON A.id_jadual= el_kunci_nilai.id_jadual 
+            WHERE id_status=1 ORDER BY waktu_input DESC, id DESC");
+
         if($this->query->num_rows >0){
             return $this->query;   
         }else{

@@ -47,7 +47,7 @@ WHERE b.thn_akademik=$thn_akademik
 AND b.periode=$periode
 			
 GROUP BY a.id_jadual
-ORDER BY total_nilai_kuesioner DESC");
+ORDER BY d.status ASC,nama_dosen ASC");
 
 
 

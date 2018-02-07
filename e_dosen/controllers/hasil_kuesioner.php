@@ -50,8 +50,6 @@ class Hasil_kuesioner extends CI_Controller
 	}
 
   private $db_2;
-
-
   public function index()
   {
 
@@ -75,6 +73,13 @@ class Hasil_kuesioner extends CI_Controller
           $data['menu_header'] = $this->menu_otomatis->create_menu_admin(0, 1, 'menu_admin_elearning_dosen');
           $this->load->view('e_dosen/_layout',$data); 
   }
+  
+  public function export_excel($tahun=''){
+           $dataa = array( 'title' => 'Laporan_Kuesioner_Mahasiswa_'.$tahun,
+                'hasil' => $this->hasil_kuesioner_model->get_mata_kuliah_kues($tahun));
+ 
+           $this->load->view('e_dosen/_layout_exc',$dataa);
+    }
 
   
   public function get_mata_kuliah_kues()
@@ -88,12 +93,12 @@ class Hasil_kuesioner extends CI_Controller
         }
 
         $thnperiode=$this->input->post('thn_periode');
+		//echo $thnperiode;
 		//echo 'aaaaaaaaaa';
-//echo $thnperiode;
 
         $y=$this->hasil_kuesioner_model->get_mata_kuliah_kues($thnperiode);
 		//echo $y;
-		$tabel=' <table class="table table-striped table-bordered table-hover" id="sample_1">
+		$tabel='<p><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDBZww-2dUEiw4nOBz-1EU6k-1mXwvQSb99eB03aQ8JbnlNDgmyg"><a href='.base_url('e_dosen/hasil_kuesioner/export_excel/'.$thnperiode.'').'>Export ke Excel</a></p><table class="table table-striped table-bordered table-hover" id="sample_1">
                             <thead>
                                 <tr>
                                   <th>No Urut</th>

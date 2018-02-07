@@ -31,6 +31,7 @@
       });
    </script>
    <!-- END JAVASCRIPTS -->   
+   <!-- </body></html> -->
 </body>
 <!-- END BODY -->
 </html>
