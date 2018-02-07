@@ -31,7 +31,12 @@
                     <!-- BEGIN EXAMPLE TABLE widget-->
                     <div class="widget">
                         <div class="widget-title">
-                            <h4><i class="icon-reorder"></i> Daftar Absesin Anda</h4>
+                            <h4><i class="icon-user"></i>&nbsp;Mata Kuliah 
+                            <?php 
+                            if (!empty($absensi)) {
+                            echo $absensi->row_Array()['nm_matkul'];
+                            }?>
+                             </h4>
                             <span class="tools">
                                 <a href="javascript:;" class="icon-chevron-down"></a>
                             </span>
@@ -41,26 +46,22 @@
                             <thead>
                                 <tr>
                                   <th>No.</th>
-                                  <th>Thn Akademik</th>
-                                  <th>Periode</th>
-                                  <th>Semester</th>
-                                    <th>Kode MK</th>
-                                    <th>Nama Mata Kuliah</th>
-                                    <th>Masuk</th>
-                                    <th>Sakit</th>
-                                    <th>Izin</th>
-                                    <th>Terlambat</th>
-                                    <th>Alfa</th>
-                                    <th>Jumlah Absensi keseluruhan</th>
-                                     <th>Presntase Kehadiran</th> 
-                                    <th>Detail Absensi</th>
+                                    <th>Nim</th>
+                                    <th>Nama</th>
+                                    <th>M</th>
+                                    <th>A</th>
+                                    <th>S</th>
+                                    <th>I</th>
+                                    <th>T</th>
+                                    <th>Jumlah Absensi</th>
+                                     <th>Persentase Kehadiran</th> 
                                 </tr>
                             </thead>
                             <tbody>
                             <!-- buat data absen -->
                             <?php
                             if($absensi == null){
-
+   
                             }else{
                               $i = 0;
                               foreach ($absensi->result() as $row) {
@@ -68,19 +69,15 @@
                                 $i++;
                                 echo "<tr>";
                                 echo "<td>".$i."</td>";
-                                echo "<td>".$row->thn_akademik."</td>";
-                                echo "<td>".$row->periode."</td>";
-                                echo "<td>".$row->semester."</td>";
-                                echo "<td>".$row->id_mtk."</td>";
-                                echo "<td>".$row->nm_matkul."</td>";
+                                echo "<td>".$row->nim."</td>";
+                                echo "<td>".$row->mhs_nama."</td>";
                                 echo "<td>".$row->jml_masuk."</td>";
+                                echo "<td>".$row->jml_alfa."</td>";
                                 echo "<td>".$row->jml_sakit."</td>";
                                 echo "<td>".$row->jml_izin."</td>";
                                 echo "<td>".$row->jml_terlambat."</td>";
-                                echo "<td>".$row->jml_alfa."</td>";
                                 echo "<td>".$row->jml."</td>";
                                 echo "<td>".floor($row->pers)."<sub>%</sub></td>";     
-                                echo "<td>".anchor('absensi/mhs_absensi/mhs_absensi_detail/'.$row->id_jadual,'Lihat Detail')."</td>";
                                 echo "</tr>";
                               }
                              } 
@@ -88,14 +85,10 @@
                             <!-- ================ -->
                             </tbody>
                         </table>
-            <hr>
-            <h5 style="color:red;"><i>Catatan:<br> 
-			Update terbaru </i><br>
-			-  Absensi Matakuliah<br>
-      -  Hanya Mahasiswa yang mengikuti tahun akademik di atas tahun 2018
-			<br><br>
-			
-			<i style="color:blue;">- Jika ada kritik maupun saran terhadap e-learning mahasiswa ini serta perbedaan SKS, dapat mengirimkan email ke <b>ulil-h@kemenperin.go.id</b> atau <b>pusdata@stmi.ac.id</b> beserta melampirkan Screenshot error yang dimaksud.Terima kasih. [ttd Web Master]</i><h5>
+                        <tr>
+    <td colspan="2" align="left">   <?php echo anchor('e_dosen/biodata/','Kembali',array('class'=> 'btn btn-primary blue','style'=>'background-color:blue'));?>
+</tr>
+           
                         </div>
                     </div>
                     <!-- END EXAMPLE TABLE widget-->

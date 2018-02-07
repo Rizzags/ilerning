@@ -44,11 +44,18 @@ echo form_open('absensi/simpan_rps_realisasi/'.$id_jadual);
                                 Materi Kuliah 
                                         </label>
                                         <div class="controls">
-                                            <textarea  name="materi"   size="30" class="span6"  /> </textarea><br>
+                                            <textarea  name="materi"   size="30" class="span6"  /></textarea><br>
                                         </div>
                                     </div>
                                       <div class="control-group">
                                         <div class="controls">
+										
+											<?php
+											  if(isset($rps_kosong )){
+												echo "<span><b><font color='red'>Isi rps terlebih dahulu</font></b></span>";
+											  }
+											?>
+											<br>
                                             <button type="submit" class="btn">Simpan Realisasi RPS</button>
                                         </div>
                                     </div>
@@ -74,24 +81,25 @@ echo form_open('absensi/simpan_rps_realisasi/'.$id_jadual);
                            </span>                    
                         </div>
                         <div class="widget-body">
-
-
-                              <table class="table table-striped table-bordered table-hover" id="">
+                         <table class="table table-striped table-bordered table-hover" id="">
                                   <thead>
                                       <tr>
                                         <th>Pertemuan</th>
-                                        <th>Tanggal Pertemuan</th>
+                                        <th>Waktu Input</th>
+                                        <th>Waktu Selesai</th>
                                         <th>Materi</th>
                                       </tr>
                                   </thead>
                                   <tbody>
                               <?php
+
 $no = 1;
 foreach ($record->result() as $r ) {
 echo "
-    <tr >
+    <tr>
         <td width='10'>$no</td>
         <td>$r->waktu_input</td>
+        <td>$r->waktu_selesai2</td>
         <td>$r->materi</td>
     </tr>
 ";
@@ -99,16 +107,9 @@ $no++;
 }
 ?>
 <tr>
-    <td colspan="2" align="left">   <?php echo anchor('absensi/mahasiswa/'.$id_jadual,'Kembali',array('class'=> 'btn btn-primary blue','style'=>'background-color:blue'));?>
-
-    <td  align="left">   <?php echo anchor('absensi/selesai/'.$id_jadual,'Selesai Mata Kuliah',array('class'=> 'btn btn-primary blue','style'=>'background-color:green'));?>
-
-    <?php
-      if(isset($rps_kosong)){
-        echo "<span color=red>Isi rps terlebih dahulu</span>";
-      }
-    ?>
-
+    <td colspan="3" align="left">   <?php echo anchor('absensi/mahasiswa/'.$id_jadual,'Kembali',array('class'=> 'btn btn-primary blue','style'=>'background-color:blue'));?>
+    <td  align="left">   <?php echo anchor('absensi/selesai/'.$id_jadual,'Selesai Mata Kuliah',array('class'=> 'btn btn-primary blue','style'=>'background-color:green','onclick' => "return confirm('Anda ingin menyelesaikan matakuliah ini?')"));?>
+	</td>
 </tr>
                                   
                                   </tbody>

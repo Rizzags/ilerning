@@ -7,7 +7,7 @@
                <div class="span12">
                   <!-- BEGIN PAGE TITLE & BREADCRUMB-->
                    <h3 class="page-title">
-                      Mata Kuliah 
+                    Rekap Mata Kuliah 
                   </h3>
                    <ul class="breadcrumb">
                        <li>
@@ -27,7 +27,7 @@
                <div class="span12">
                   <div class="widget">
                         <div class="widget-title">
-                           <h4><i class="icon-user"></i>&nbsp;Mata Kuliah </h4>
+                           <h4><i class="icon-user"></i>&nbsp;Rekap Mata Kuliah</h4>
                            <span class="tools">
                            <a href="javascript:;" class="icon-chevron-down"></a>
                            </span>                    
@@ -46,41 +46,42 @@
                                         <th>Jam Mulai</th>
                                         <th>Jam Selesai</th>
                                         <th>Tahun Akademik</th>
-                                        <th>Jumlah Pertemuan</th>
+                                        <!--<th>Ruangan</th>-->
                                         <th>Operasi</th>
                                       </tr>
                                   </thead>
                                   <tbody>
                               <?php
+							  
 $no = 1;
 if($record == null){
 	
+}else{							  
+$no = 1;
+foreach ($record->result() as $r ) {
+echo "
+    <tr>
+        <td width='10'>$no</td>
+        <td>$r->nm_mtk</td>
+        <td>$r->nm_dosen</td>
+        <td>$r->kelas</td>
+        <td>$r->hari</td>
+        <td>$r->jam_mulai</td>
+        <td>$r->jam_selesai</td>
+        <td>$r->thn_akademik</td>
+    <td  >".anchor('absensi/absen_detail_mutu/'.$r->id_jadual,'Pelaksanaan')."
+    | ".anchor('absensi/rekap_mhs_absensi/'.$r->id_jadual,'Rekap Absen Mahasiswa')."
+    | ".anchor('absensi/pembanding_rps/'.$r->id_jadual.'/'.$r->id_mtk,'Pembanding RPS')."
+    </td>
+    </tr> 
+";
+$no++;
 }
-else{
-	foreach ($record->result() as $r ) {
-	echo "
-		<tr >
-			<td width='10'>$no</td>
-			<td>$r->nm_mtk</td>
-			<td>$r->nm_dosen</td>
-			<td>$r->kelas</td>
-			<td>$r->hari</td>
-			<td>$r->jam_mulai</td>
-			<td>$r->jam_selesai</td>
-			<td>$r->thn_akademik</td>
-			<td>$r->jml_pertemuan</td>
-		<td  >".anchor('absensi/absen_detail_mutu/'.$r->id_jadual,'Pelaksanaan |')."
-			  ".anchor('absensi/absen_detail/'.$r->id_jadual,'Lihat Detail')."
-		</td>
-		</tr> 
-	";
-	$no++;
-	}
 }
 ?>
                                   </tbody>
                               </table>
-      
+
                         </div>
                   </div>
                </div>

@@ -7,7 +7,7 @@
                <div class="span12">
                   <!-- BEGIN PAGE TITLE & BREADCRUMB-->
                    <h3 class="page-title">
-                      Mata Kuliah 
+                  RPS Realisasi Dosen
                   </h3>
                    <ul class="breadcrumb">
                        <li>
@@ -22,65 +22,79 @@
             </div>
             <!-- END PAGE HEADER-->
             <!-- BEGIN PAGE CONTENT-->
-
-            <div class="row-fluid">
+           <div class="row-fluid">
                <div class="span12">
                   <div class="widget">
                         <div class="widget-title">
-                           <h4><i class="icon-user"></i>&nbsp;Mata Kuliah </h4>
+                           <h4><i class="icon-user"></i>&nbsp;Dosen 
+						    <?php if (!empty($record))
+                                 {
+                                  echo $record->row_Array()['nama'];
+                                 }?>
+                                  pada Mata Kuliah 
+                            <?php  
+                                 if (!empty($record)) 
+								 { echo $record->row_Array()['nama_mtk'];
+							}?>
+								Kelas
+							<?php  
+                                 if (!empty($record)) 
+								 { echo $record->row_Array()['nama_kelas'];
+							}?>
+							</h4>
                            <span class="tools">
                            <a href="javascript:;" class="icon-chevron-down"></a>
                            </span>                    
                         </div>
                         <div class="widget-body">
-
-
+                          
                             <table class="table table-striped table-bordered table-hover" id="sample_1">
                                   <thead>
                                       <tr>
-                                        <th>No.</th>
-                                        <th>Mata Kuliah</th>
-                                        <th>Dosen</th>
-                                        <th>Kelas</th>
-                                        <th>Hari</th>
-                                        <th>Jam Mulai</th>
-                                        <th>Jam Selesai</th>
-                                        <th>Tahun Akademik</th>
-                                        <th>Jumlah Pertemuan</th>
-                                        <th>Operasi</th>
+                                        <th>Pertemuan</th>
+                                        <th>Waktu Mulai</th>
+                                        <th>Waktu Selesai</th>
+                                        <th>Durasi Realisasi</th>
+                                        <th>Durasi Sebenarnya</th>
+                                        <th>Materi</th>
+										<th>Status</th>
                                       </tr>
                                   </thead>
                                   <tbody>
-                              <?php
-$no = 1;
-if($record == null){
-	
-}
-else{
-	foreach ($record->result() as $r ) {
-	echo "
-		<tr >
-			<td width='10'>$no</td>
-			<td>$r->nm_mtk</td>
-			<td>$r->nm_dosen</td>
-			<td>$r->kelas</td>
-			<td>$r->hari</td>
-			<td>$r->jam_mulai</td>
-			<td>$r->jam_selesai</td>
-			<td>$r->thn_akademik</td>
-			<td>$r->jml_pertemuan</td>
-		<td  >".anchor('absensi/absen_detail_mutu/'.$r->id_jadual,'Pelaksanaan |')."
-			  ".anchor('absensi/absen_detail/'.$r->id_jadual,'Lihat Detail')."
-		</td>
-		</tr> 
-	";
-	$no++;
-	}
-}
-?>
+									<?php
+									if ($record == null) {
+									  
+									}else{
+
+									$no = 1;
+									foreach ($record->result() as $r ) {
+									$status = "";
+									$status	= (($r->validasi_prodi==1)?'Sudah divalidasi':'Belum divalidasi');
+									echo "
+										<tr >
+											<td width='10'>$no</td>
+											<td>$r->waktu_input</td>
+											<td>$r->waktu_selesai</td>
+											<td>$r->x</td>
+											<td>$r->durasi_sebenarnya</td>
+											<td>$r->materi</td>
+											<td>$status</td>
+										</tr> 
+									";
+									$no++;
+									}
+									}
+									?>
                                   </tbody>
                               </table>
-      
+<tr>
+  <td colspan="2" align="left"> 
+ <?php if (!empty($record))
+	{ 
+     echo anchor('absensi/cetak_rps_realisasi/'.$record->row_Array()['id_jadual'],'Cetak',array('class'=> 'btn btn-primary blue','style'=>'background-color:green', 'target' => '_blank' ));
+    }
+   ?>
+</tr>
                         </div>
                   </div>
                </div>

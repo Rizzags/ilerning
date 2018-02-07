@@ -26,10 +26,7 @@
                </div>
             </div>
             <!-- END PAGE HEADER-->
-               
-			   
-				  
-				  
+          
                   <!-- BEGIN ADVANCED TABLE widget-->
             <div class="row-fluid">
                 <div class="span12">
@@ -115,7 +112,7 @@ function checkAlphaNumeric(e) {
 <?php
 echo form_open('absensi/simpan_absen_edit/'.$record2->id_jadual);
 ?>
-<input class="form-control" type="text" name="id_absen"   value="<?php echo $record2->id_absen; ?>" readonly/>
+<input class="form-control" type="hidden" name="id_absen"   value="<?php echo $record2->id_absen; ?>" readonly/>
                               <table class="table table-striped table-bordered table-hover" id="">
                                   <thead style="vertical-align:center;">
                                       <tr>
@@ -195,10 +192,9 @@ $i++;
               
 
 <table style="margin:30px 0 50px 80px;width:100%;">
-
   <tr>
-    <td> <button type="submit"  style="background-color:red;" class="btn btn-primary blue"  ><i class="icon-lock"></i>  SIMPAN</button></td>
-    <td>   <?php echo anchor('absensi/rps_realisasi/'.$id_jadual,'Selanjutnya Realisasi RPS',array('class'=> 'btn btn-primary blue','style'=>'background-color:blue'));?>
+    <td> <button type="submit"  style="background-color:red;" class="btn btn-primary blue"  ><i class="icon-lock"></i>  Selanjutnya Realisasi RPS</button></td>
+    <td>   
   </td> 
   </tr>
 </table>

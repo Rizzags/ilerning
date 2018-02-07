@@ -20,9 +20,9 @@
 
 		function index()
 		{
-			if( $this->mhs_log_in != 'log_in'){
-          		redirect('mhs/login');
-        	}
+		//	if( $this->mhs_log_in != 'log_in'){
+        //  		redirect('mhs/login');
+        //	}
 
         	  $data['title'] = 'E Learning Mahasiswa';
 	          $data['description'] = 'E Learning Mahasiswa';
@@ -38,9 +38,9 @@
 
         function mhs_absensi_detail()
 		{
-			if( $this->mhs_log_in != 'log_in'){
-          		redirect('mhs/login');
-        	}
+		//	if( $this->mhs_log_in != 'log_in'){
+        //  		redirect('mhs/login');
+        //	}
         	  $id_jadual = $this->uri->segment(4);
 	   		  $data['title'] = 'E Learning Mahasiswa';
 	          $data['description'] = 'E Learning Mahasiswa';
